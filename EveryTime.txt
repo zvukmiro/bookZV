@@ -1,0 +1,34 @@
+Set the environment variable FLASK_APP to be application.py. 
+GO TO THE DIRECTORY WHERE PROJECT IS:
+
+$ export FLASK_APP=application.py
+(no spaces around =)
+$ export FLASK_DEBUG to 1, 
+
+# automatically reload your web application whenever you save a change to a file.
+
+$ export DATABASE_URL = postgres://rryzkdxrolrzms:dd0ccaf3ec412c3b26a8344b47863755b32f3a2e05db53719e54d3db21f7eef5@ec2-54-243-187-30.compute-1.amazonaws.com:5432/d1ajepc0vqo40t
+
+
+$ flask run
+
+
+database URL:
+postgres://rryzkdxrolrzms:dd0ccaf3ec412c3b26a8344b47863755b32f3a2e05db53719e54d3db21f7eef5@ec2-54-243-187-30.compute-1.amazonaws.com:5432/d1ajepc0vqo40t
+
+
+*********
+
+to access database login on heroku website :
+https://adminer.cs50.net
+
+user host/...password provided in file in dir Heroku
+--- here you can check directly if review is posted, or if
+new user is added -- any changes to the database
+
+to access good reads review:
+
+you DO NOT have to be logged in good reads, or have
+good read open in the browser!
+
+

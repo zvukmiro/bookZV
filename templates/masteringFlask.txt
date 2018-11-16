@@ -1,0 +1,18 @@
+database drivers
+
+* postgresql
+$ pip3 install psycopg2
+
+* MySQL
+$ pip3 install MySQL-python
+
+*Oracle
+$ pip3 install cx_oracle
+
+
+when you are getting variable from html as a function arg
+def actor(actor_id):
+    actor=Actor.query.get_or_404(actor_id)
+
+in jinja2 {{}} for variables
+{%  %} for for loops, if statements etc
