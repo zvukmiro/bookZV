@@ -46,15 +46,20 @@ def register():
     if request.method == 'POST' and form.validate():
         username = form.username.data
         password = bcrypt.encrypt(str(form.password.data))
-        # checking if there is the same username in db
-        if (db.execute("SELECT * FROM users WHERE username=:username", {"username":username})).rowcount == 0:
-            db.execute("INSERT INTO users (username, password) VALUES (:username, :password)", {"username":username, "password":password})
-            db.commit()
+        if username and password:
+            username=username.lower()
+            # checking if there is the same username in db
+            if (db.execute("SELECT * FROM users WHERE username=:username", {"username":username})).rowcount == 0:
+                db.execute("INSERT INTO users (username, password) VALUES (:username, :password)", {"username":username, "password":password})
+                db.commit()
+            else:
+                message = "Username already exists, please choose different username."
+                return render_template('register.html', form=form, message=message)
+            flash('You are now registered, please login', 'success')
+            return redirect(url_for('login'))
         else:
-            message = "Username already exists, please choose different username."
+            message = "Need to input both username and password."
             return render_template('register.html', form=form, message=message)
-        flash('You are now registered, please login', 'success')
-        return redirect(url_for('login'))
     return render_template('register.html', form=form)
 
 
@@ -63,11 +68,17 @@ def login():
     if request.method == 'POST':
         username=request.form.get("username")
         password = str(request.form.get("password"))
-        result=db.execute("SELECT * FROM users WHERE username=:username", {"username" : username})
-        if result.rowcount==1 and bcrypt.verify(password, result.first()[2]):
-            session['logged_in'] = True
-            session['username'] = username
-            return redirect(url_for('books'))
+        if username and password:
+            username=username.lower()
+            result=db.execute("SELECT * FROM users WHERE username=:username", {"username" : username})
+            if result.rowcount==1 and bcrypt.verify(password, result.first()[2]):
+                session['logged_in'] = True
+                session['username'] = username
+                return redirect(url_for('books'))
+            else:
+                flash('Username and password do not match. Please try again.')
+        else:
+            flash('Need to input both username and password. Please try again.')
     return render_template('login.html')
 
 @app.route('/logout')
@@ -86,15 +97,18 @@ def books():
         author=request.form.get("author")
         if isbn:
             books =db.execute("SELECT * FROM books WHERE isbn=:isbn", {"isbn" : isbn})
-
+            if books.rowcount == 0:
+                books = db.execute("SELECT * FROM books WHERE isbn LIKE :isbn LIMIT 60", {"isbn" : isbn+'%'})
         elif title and author:
             books =db.execute("SELECT * FROM books WHERE author=:author AND title=:title LIMIT 30", {"author" : author, "title" : title})
-
         elif title:
             books = db.execute("SELECT * FROM books WHERE title=:title LIMIT 30", {"title" : title})
-
+            if books.rowcount == 0:
+                books = db.execute("SELECT * FROM books WHERE title LIKE :title LIMIT 60", {"title" : '%'+title+'%'})
         elif author:
             books = db.execute("SELECT * FROM books WHERE author=:author LIMIT 30", {"author" : author})
+            if books.rowcount == 0:
+                books = db.execute("SELECT * FROM books WHERE author LIKE :author LIMIT 60", {"author" : '%'+author+'%'})
         db.close()
     return render_template("books.html", books=books)
 
@@ -123,10 +137,13 @@ def book(isbn):
 @app.route("/review", methods=['GET', 'POST'])
 def review():
     if request.method=="POST":
+        isbn=session['isbn']
+        username =session['username']
+        review =request.form.get("review")
+        if review.isdigit() and (review >= 1 and review <= 5):
+            flash('The review rating can be 1 to 5 stars. Please enter numbers btw 1.0 and 5.0.')
+            return redirect(url_for('error'))
         try:
-            isbn=session['isbn']
-            username =session['username']
-            review =request.form.get("review")
             result=db.execute("SELECT * FROM reviews WHERE rw_user=:username AND rw_isbn=:isbn", {"username" : username, "isbn":isbn})
             if (result.rowcount)>0:
                 flash("Duplicate review for the same book not accepted.")

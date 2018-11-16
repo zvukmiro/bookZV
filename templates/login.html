@@ -14,15 +14,16 @@
     {% endwith %}
   <form method="POST" action="">
     <div class="form-group">
-        <input class="form-control" name="username" placeholder="username">
+        <input class="form-control" name="username" type="text" placeholder="username">
     <div>
     <p></p>
     <div class="form-group">
-        <input class="form-control" name="password" placeholder="password">
+        <input class="form-control" name="password" type="password" placeholder="password">
     <div>
     <p></p>
     <p><input type="submit" class="btn btn-primary" value="Submit"></p>
   </form>
+  <p> Click to go <a href="{{ url_for('index') }}">home</a>
 {% endblock %}
 
 
