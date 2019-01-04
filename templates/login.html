@@ -1,5 +1,7 @@
-
 {% extends 'layout.html' %}
+{% block title %}
+    Login
+{% endblock %}
 
 {% block body %}
   <h1>Login</h1>
@@ -23,7 +25,9 @@
     <p></p>
     <p><input type="submit" class="btn btn-primary" value="Submit"></p>
   </form>
-  <p> Click to go <a href="{{ url_for('index') }}">home</a>
+  <p> Click to go <a href="{{ url_for('index') }}">home</a></p>
+  <p> Click to register <a href="{{ url_for('register') }}"> register</a></p>
+
 {% endblock %}
 
 

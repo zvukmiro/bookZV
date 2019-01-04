@@ -140,7 +140,7 @@ def review():
         isbn=session['isbn']
         username =session['username']
         review =request.form.get("review")
-        if review.isdigit() and (review >= 1 and review <= 5):
+        if review.isdigit() and (int(review) < 1 and int(review) > 5):
             flash('The review rating can be 1 to 5 stars. Please enter numbers btw 1.0 and 5.0.')
             return redirect(url_for('error'))
         try:
@@ -148,6 +148,7 @@ def review():
             if (result.rowcount)>0:
                 flash("Duplicate review for the same book not accepted.")
                 return redirect(url_for('error'))
+            review = int(review)
             res = db.execute("INSERT INTO reviews (rw_isbn, rw_user, rating) VALUES (:bookNum, :person, :numb)", {"bookNum":isbn, "person":username, "numb":review})
             db.commit()
             reviewCnt = db.execute("SELECT * FROM reviews WHERE rw_user=:username", {"username" : username})

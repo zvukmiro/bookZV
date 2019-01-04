@@ -5,6 +5,10 @@
 {% endblock %}
 
 {% block body %}
+    <style type="text/css">
+      body {background: url("https://res.cloudinary.com/dplyxbspe/image/upload/v1545434640/bookHeart.jpg")}
+      h1, h3, p {color: #ffffff;}
+    </style>
     <h1>Success!</h1>
 
     <h3>You have posted a book review. Thank you {{username }}!</h3><br>
@@ -13,3 +17,4 @@
 
     <p> Click here to <a href="{{ url_for('logout') }}">logout</a></p>
 {% endblock %}
+
