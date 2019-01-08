@@ -2,3 +2,7 @@ GivenByProject/
 help/
 _query_test/
 *.txt
+static/img/
+flask_session/
+flask_session
+__pycache__
